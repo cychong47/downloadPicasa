@@ -13,25 +13,14 @@ import re
 import json
 from optparse import OptionParser, OptionGroup
 
-"""
-	2011.05.26	Can specify the oldest date to download
-	2011.05.27	Add -l option to list-up only
-				Add -d option to specify the oldest date to download
-	2011.05.27	Replace -l option to -g. 'list only' is the default action
-	2014.03.01	Get login information from config file
-"""
 
 # private albums
-URL_TO_GET_PHOTOS 	= '/data/feed/api/user/default/albumid/%s?kind=photo'
-URL_TO_GET_TAGS 	= '/data/feed/api/user/default/albumid/%s/photoid/%s?kind=tag' 
-URL_TO_GET_COMMENTS	= '/data/feed/api/user/default/albumid/%s/photoid/%s?kind=comment'
+URL_FOR_PHOTOS 	= '/data/feed/api/user/default/albumid/%s?kind=photo'
+URL_FOR_TAGS 	= '/data/feed/api/user/default/albumid/%s/photoid/%s?kind=tag' 
+URL_FOR_COMMENTS	= '/data/feed/api/user/default/albumid/%s/photoid/%s?kind=comment'
 
 # public albums
-URL_TO_GET_PUBLIC_PHOTOS 	= '/data/feed/base/user/%s/albumid/%s?kind=photo'
-
-# Change the followings with yours
-LIST_ONLY			= 0
-DOWNLOAD			= 1
+URL_FOR_PUBLIC_PHOTOS 	= '/data/feed/base/user/%s/albumid/%s?kind=photo'
 
 def downloadFile(url, dir_name):
 	"""Download the data at URL to the current directory"""
@@ -83,12 +72,11 @@ def getPhoto(albums, password, download, oldest_date = ""):
 			os.mkdir(album.title.text)
 
 		if password:
-			photos = gdClient.GetFeed(URL_TO_GET_PHOTOS % (album.gphoto_id.text))
+			photos = gdClient.GetFeed(URL_FOR_PHOTOS % (album.gphoto_id.text))
 		else:
-			photos = gdClient.GetFeed(URL_TO_GET_PUBLIC_PHOTOS % (loginId, album.gphoto_id.text))
+			photos = gdClient.GetFeed(URL_FOR_PUBLIC_PHOTOS % (loginId, album.gphoto_id.text))
 
 		for photo in photos.entry:
-#			print album.title.text
 			downloadFile(photo.content.src, album.title.text)
 			downloadCount += 1
 
@@ -113,7 +101,6 @@ if __name__ == '__main__':
 	gdClient = connectToPicasa(loginId, password)
 
 	albums = getAlbum(gdClient, loginId)
-#	print len(sys.argv), sys.argv[1]
 
 	if options.oldest_date != "" and len(options.oldest_date) == 8:
 		getPhoto(albums, password, options.download, options.oldest_date)
