@@ -10,14 +10,17 @@ How to use
 2. Set gmail account and password in config.json
 3. run 
 
- Run without any options lists albums
+Options
+----------
 
-    python picasa.py 
+ Get album list
 
- Run with -d option will download photos
+        python picasa.py 
 
-    python picasa.py -d
+ Download all photos
 
- To download only after a specific date, user -t option
+        python picasa.py -d
 
-    python picasa.py -d -t 20140101
+ Download only after a specific date, user -t option
+
+        python picasa.py -d -t 20140101
